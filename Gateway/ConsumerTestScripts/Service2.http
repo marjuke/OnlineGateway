@@ -1,0 +1,57 @@
+#uses httpyac extension
+# Will fail due to missing querystring
+GET http://localhost:5175/Service2
+###
+# Will fail due to missing wsdl
+GET http://localhost:5175/Service2?wsdl
+###
+# will fail due to a bad media type
+POST http://localhost:5175/Service2
+###
+# will fail due to a missing payload
+POST http://localhost:5175/Service2
+Content-Type: application/xml
+###
+# will succeed
+POST https://localhost:7131/Service2
+Content-Type: application/xml
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:ser="http://some.com/service/">
+   <soap:Header/>
+   <soap:Body>
+      <ser:GetWeatherForecast/>
+   </soap:Body>
+</soap:Envelope>
+###
+# will fail due to a deserialization error
+POST http://localhost:5248/Service2
+Content-Type: application/xml
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://some.com/service/">
+   <soap:Header/>
+   <soap:Body>
+      <ser:GetWeatherForecast/>
+   </soap:Body>
+</soap:Envelope>
+###
+POST https://localhost:7131/Channel
+Content-Type: application/xml
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:ser="http://some.com/service/">
+   <soap:Header/>
+   <soap:Body>
+      <ser:ApplyTransactionRequest>
+         <ser:value>1</ser:value>
+      </ser:ApplyTransactionRequest>
+   </soap:Body>
+</soap:Envelope>
+
+
+###
+POST https://localhost:7131/Channel
+Content-Type: application/xml;charset=utf-16
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:ser="http://some.com/service/">
+   <soap:Header/>
+   <soap:Body>
+      <ser:ApplyTransactionRequest>
+         <ser:value>1</ser:value>
+      </ser:ApplyTransactionRequest>
+   </soap:Body>
+</soap:Envelope>

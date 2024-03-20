@@ -1,0 +1,11 @@
+#uses httpyac extension
+# @noRejectUnauthorized
+# Will format the response as JSON
+GET http://localhost:5175/SOAPAuthenticationUtilities/GetEncodedPassword
+###
+GET http://localhost:5175/SOAPAuthenticationUtilities/GetEncodedPassword?password=password
+###
+GET http://localhost:5175/SOAPAuthenticationUtilities/TestAuthentication
+###
+GET http://localhost:5175/SOAPAuthenticationUtilities/TestAuthentication?userid=dd27d494-55f4-4912-a38e-626ddb019ac7&password=HmplEgxI1ufo8JjU
+
