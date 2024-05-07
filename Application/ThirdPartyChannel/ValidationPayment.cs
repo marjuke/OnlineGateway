@@ -91,7 +91,18 @@ namespace Application.ThirdPartyChannel
                             return responseObj;
                         }
                     }
-
+                    //payamount must be greater than 0
+                    if (Convert.ToDecimal(request.reqValidationPayment.PayAmount) <= 0)
+                    {
+                        _logger.LogWarning("Handling command {CheckInformation}", "PayAmount is less than 0");
+                        responseObj = new bKashOuterResponseClass
+                        {
+                            ResponseCode = "BEC0001",
+                            ResponseDesc = "PayAmount must be greater than 0. Please try again.",
+                            Parameters = []
+                        };
+                        return responseObj;
+                    }
                     // channelCode checking is mandatory
                     if (string.IsNullOrEmpty(request.reqValidationPayment.channelCode))
                     {

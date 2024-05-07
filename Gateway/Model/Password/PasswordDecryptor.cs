@@ -5,9 +5,9 @@ namespace Gateway.Model.Password
 {
     public static class PasswordDecryptor
     {
-        public static string GetPassword(string password)
+        public static string GetPassword(string password,string Key)
         {
-            string key = "apTN9ruR3hef1d1cQ4zylWRSeXmXwwKZg98NiKdrEmI=";
+            string key = Key;
             var KeyByte = Convert.FromBase64String(key);
             var passHexa = Convert.FromBase64String(password);
             var d = passHexa.Take(16).ToArray();
@@ -15,6 +15,28 @@ namespace Gateway.Model.Password
             var result = Decrypt(s, KeyByte, d);
             string modifiedresult = RemoveFirstAndLast(result, 6, 12);
             return modifiedresult;
+        }
+        public static string GetPasswordWithOutSubString(string password, string Key)
+        {
+            //decrypt password with key in aes
+            string key = Key;
+            var KeyByte = Convert.FromBase64String(key);
+            var passHexa = Convert.FromBase64String(password);
+            var d = passHexa.Take(16).ToArray();
+            var s = passHexa.Skip(16).ToArray();
+            var result = Decrypt(s, KeyByte, d);
+            return result;
+        }
+        public static string GetKeyWithOutSubStringEncrypt(string password, string Key)
+        {
+            //encrypt password with key in aes
+            string key = Key;
+            var KeyByte = Convert.FromBase64String(key);
+            var passHexa = Encoding.UTF8.GetBytes(password);
+            var d = passHexa.Take(16).ToArray();
+            var s = passHexa.Skip(16).ToArray();
+            var result = Encrypt(Encoding.UTF8.GetString(s), KeyByte, d);
+            return result;
         }
         static string RemoveFirstAndLast(string input, int charactersToRemoveFromStart, int charactersToRemoveFromEnd)
         {
@@ -51,26 +73,26 @@ namespace Gateway.Model.Password
             return Encoding.UTF8.GetString(decryptedBytes);
         }
         // encrypt password
-        //public static string Encrypt(string plainText, byte[] key, byte[] iv)
-        //{
-        //    using Aes aesAlg = Aes.Create();
-        //    aesAlg.Key = key;
-        //    aesAlg.IV = iv;
-        //    ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
-        //    byte[] encrypted;
-        //    using (var msEncrypt = new System.IO.MemoryStream())
-        //    {
-        //        using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-        //        {
-        //            using (var swEncrypt = new System.IO.StreamWriter(csEncrypt))
-        //            {
-        //                swEncrypt.Write(plainText);
-        //            }
-        //        }
-        //        encrypted = msEncrypt.ToArray();
-        //    }
-        //    return Convert.ToBase64String(encrypted);
-        //}
+        public static string Encrypt(string plainText, byte[] key, byte[] iv)
+        {
+            using Aes aesAlg = Aes.Create();
+            aesAlg.Key = key;
+            aesAlg.IV = iv;
+            ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+            byte[] encrypted;
+            using (var msEncrypt = new System.IO.MemoryStream())
+            {
+                using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                {
+                    using (var swEncrypt = new System.IO.StreamWriter(csEncrypt))
+                    {
+                        swEncrypt.Write(plainText);
+                    }
+                }
+                encrypted = msEncrypt.ToArray();
+            }
+            return Convert.ToBase64String(encrypted);
+        }
 
     }
 }

@@ -8,6 +8,11 @@ using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 using SoapCore;
 using System.ServiceModel;
+using Gateway.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 namespace Gateway.Extension
 {
     public static class ApplicationServiceExtinsions
@@ -18,19 +23,7 @@ namespace Gateway.Extension
             {
                 opt.UseSqlServer(config.GetConnectionString("DefaultConnection"));
             });
-            //services.Configure<RequestLocalizationOptions>(options =>
-            //{
-            //    options.DefaultRequestCulture = new RequestCulture("en-US");
-            //    // Other globalization settings...
-            //});
-            //services.Configure<RequestLocalizationOptions>(options =>
-            //{
-            //    options.DefaultRequestCulture = new RequestCulture(CultureInfo.InvariantCulture);
-            //    // Other globalization settings...
-            //});
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            // Add service for List Handler
-            //services.AddMediatR(typeof(List.Handler));
+            
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(TransactionList.Handler).GetTypeInfo().Assembly));
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
             services.AddEndpointsApiExplorer();
@@ -39,19 +32,28 @@ namespace Gateway.Extension
             {
                 opt.AddPolicy("CorsPolicy", policy =>
                 {
-                    policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000");
+                    policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:4200");
                 });
             });
-            //services.AddMvc(options =>
-            //{
-            //    options.OutputFormatters.Add(new XmlSerializerOutputFormatterNamespace());
-            //}).AddXmlSerializerFormatters();
             services.Configure<IISServerOptions>(options =>
             {
                 options.AllowSynchronousIO = true; // Ensure synchronous IO is enabled
             });
-            // Inside Configure method
-
+            services.AddScoped<TokenService>();
+            //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
+            //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("4Zs6r0AEnoLgN0GaRirrdL8RLUvwume4xQGBLjl3DKBTYwYnum1etLV2kjE7"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("4Zs6r0AEnoLgN0GaRirrdL8RLUvwume4xQGBLjl3DKBTYwYnum1etLV2kjE7dsfdsfdfdsfdsfewrfdfDFSDFASDDdsfdsfewr23432adadsdsadfdsfdsfdsfdsfdsfadsfdsfdsafafafasdfsfewrewrdsfadsfadsfads"));
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(opt =>
+                {
+                    opt.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = key,
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
             return services;
         }
     }

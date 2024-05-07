@@ -435,6 +435,9 @@ namespace Persistence.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("BranchCode")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ChannelListID")
                         .HasColumnType("int");
 

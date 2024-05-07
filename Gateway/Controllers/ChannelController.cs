@@ -42,7 +42,7 @@ public class ChannelController : SOAPControllerBase
     //[Produces("application/soap+xml")]
     public async Task<ContentResult> OperationSelector(SOAP1_2RequestEnvelope env)
     {
-
+        var key = "apTN9ruR3hef1d1cQ4zylWRSeXmXwwKZg98NiKdrEmI=";
         _logger.LogInformation("OperationSelectior is called ");
         await Mediator.Send(new StanUpdate.Command { Stan = "OK" });
         if (!env.Body.ApplyTransactionRequest.Header.LoginID.IsNullOrEmpty())
@@ -53,7 +53,7 @@ public class ChannelController : SOAPControllerBase
                 string Password = "";
                 try
                 {
-                    Password = PasswordDecryptor.GetPassword(env.Body.ApplyTransactionRequest.Header.Password);
+                    Password = PasswordDecryptor.GetPassword(env.Body.ApplyTransactionRequest.Header.Password,key);
                 }
                 catch (Exception)
                 {

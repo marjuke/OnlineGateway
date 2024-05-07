@@ -111,7 +111,7 @@ namespace Application.ThirdPartyChannel
                             HttpClient client = new HttpClient();
                             client.BaseAddress = new Uri("http://" + ip.Ip + "/");
                             var reqtime = DateTime.Now.ToString("yyyyMMddHHmmss");
-                            HttpResponseMessage response = await client.GetAsync($"api/paymentValidation/checkbyFinapp?AccountID={data.PaymentID}&ActAmount={data.ActualAmount}&payamount={data.PayAmount}&referenceNo={data.TrxRef}&reqTime={reqtime}");
+                            HttpResponseMessage response = await client.GetAsync($"api/paymentValidation/checkbyFinapp?AccountID={data.PaymentID}&ActAmount={data.ActualAmount}&payamount={data.PayAmount}&referenceNo={data.TrxRef}&reqTime={reqtime}&channelcode={data.ChannelCode}");
 
                             data.PaymentConfirmResCode = response.StatusCode.ToString();
 

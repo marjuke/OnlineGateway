@@ -1,0 +1,4 @@
+<ApplyTransactionResponse xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ResponseCode xmlns="http://cps.huawei.com/cpsinterface/goa/at">BEC0001</ResponseCode>
+  <ResponseDesc xmlns="http://cps.huawei.com/cpsinterface/goa/at">ChannelCode not permitted. Please try again.</ResponseDesc>
+</ApplyTransactionResponse>

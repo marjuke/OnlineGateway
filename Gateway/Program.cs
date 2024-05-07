@@ -1,26 +1,13 @@
-using Gateway.Controllers;
 using Gateway.Extension;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Serilog;
-using SOAP.Authentication.Handlers.SOAP;
 using SOAP.Mvc.DependencyInjection;
-using SOAP.Mvc.ModelBinding;
-using SoapCore;
 using System.Text;
-using System.Xml.Serialization;
-using System.Xml;
-using static NuGet.Packaging.PackagingConstants;
-using static System.Net.Mime.MediaTypeNames;
-using Microsoft.AspNetCore.Mvc.Filters;
-using System.Configuration;
-using System.Text.Unicode;
 using CustomFormattersSample.Formatters;
 using Microsoft.AspNetCore.HttpOverrides;
 using Gateway.MiddleWare;
-using Newtonsoft.Json.Linq;
 
 
 
@@ -34,6 +21,7 @@ builder.Host.UseSerilog();
 try
 {
     Log.Information("Starting Web Host");
+
 
     builder.Host.UseSerilog((hostContext, services, configuration) =>
     {
@@ -59,7 +47,7 @@ try
 
 
     });
-    
+
     //.AddXmlSerializerFormatters();
     //builder.Services.AddControllers(options =>
     //{
@@ -148,8 +136,8 @@ try
     }
 
     //app.UseHttpsRedirection();
-
-    //app.UseAuthorization();
+    app.UseAuthentication();
+    app.UseAuthorization();
     //app.UseCustomMiddleware();
 
     app.MapControllers();
